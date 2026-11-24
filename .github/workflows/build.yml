@@ -1,0 +1,26 @@
+
+name: Build Windows DLL
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure MSBuild
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Build x64 Release
+        run: msbuild client.sln /p:Configuration=Release /p:Platform=x64
+
+      - name: Upload DLL
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-x64
+          path: build/client.dll
+          if-no-files-found: error
